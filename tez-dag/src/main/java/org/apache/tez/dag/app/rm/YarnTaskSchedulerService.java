@@ -227,6 +227,8 @@ public class YarnTaskSchedulerService extends TaskScheduler
     this.appTrackingUrl = taskSchedulerContext.getAppTrackingUrl();
     try {
       this.conf = TezUtils.createConfFromUserPayload(taskSchedulerContext.getInitialUserPayload());
+      LOG.info("tez.am.resource.memory.mb in YarnTaskSchedulerService: {}",
+          this.conf.get("tez.am.resource.memory.mb"));
     } catch (IOException e) {
       throw new TezUncheckedException(
           "Failed to deserialize payload for " + YarnTaskSchedulerService.class.getSimpleName(),
@@ -246,6 +248,7 @@ public class YarnTaskSchedulerService extends TaskScheduler
     this.appTrackingUrl = taskSchedulerContext.getAppTrackingUrl();
     try {
       this.conf = TezUtils.createConfFromUserPayload(taskSchedulerContext.getInitialUserPayload());
+      LOG.info("tez.am.resource.memory.mb in YarnTaskSchedulerService: {}", this.conf.get("tez.am.resource.memory.mb"));
     } catch (IOException e) {
       throw new TezUncheckedException(
           "Failed to deserialize payload for " + YarnTaskSchedulerService.class.getSimpleName(),
@@ -279,6 +282,7 @@ public class YarnTaskSchedulerService extends TaskScheduler
   public synchronized void initialize() {
 
     // TODO Post TEZ-2003. Make all of these final fields.
+    LOG.info("tez.am.resource.memory.mb in YarnTaskSchedulerService: {}", this.conf.get("tez.am.resource.memory.mb"));
     amRmClient.init(conf);
     int heartbeatIntervalMax = conf.getInt(
         TezConfiguration.TEZ_AM_RM_HEARTBEAT_INTERVAL_MS_MAX,
@@ -355,7 +359,8 @@ public class YarnTaskSchedulerService extends TaskScheduler
             ", numHeartbeatsBetweenPreemptions: " + numHeartbeatsBetweenPreemptions +
             ", idleContainerMinTimeout: " + idleContainerTimeoutMin +
             ", idleContainerMaxTimeout: " + idleContainerTimeoutMax +
-            ", sessionMinHeldContainers: " + sessionNumMinHeldContainers);
+            ", sessionMinHeldContainers: " + sessionNumMinHeldContainers +
+            ", tez.am.resource.memory.mb: {}", conf.get("tez.am.resource.memory.mb"));
   }
 
   @Override
