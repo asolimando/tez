@@ -473,6 +473,9 @@ public class TezClientUtils {
 
     // Setup resource requirements
     Resource capability = Records.newRecord(Resource.class);
+    LOG.info("Memory tez.am.resource.memory.mb in TezClientUtils: {}",
+        amConfig.getTezConfiguration().getInt(TezConfiguration.TEZ_AM_RESOURCE_MEMORY_MB,
+            TezConfiguration.TEZ_AM_RESOURCE_MEMORY_MB_DEFAULT));
     capability.setMemory(
         amConfig.getTezConfiguration().getInt(TezConfiguration.TEZ_AM_RESOURCE_MEMORY_MB,
             TezConfiguration.TEZ_AM_RESOURCE_MEMORY_MB_DEFAULT));

@@ -630,11 +630,17 @@ public class YARNRunner implements ClientProtocol {
       String queueName = jobConf.get(JobContext.QUEUE_NAME,
           YarnConfiguration.DEFAULT_QUEUE_NAME);
       dagAMConf.set(TezConfiguration.TEZ_QUEUE_NAME, queueName);
-      
+
       int amMemMB = jobConf.getInt(MRJobConfig.MR_AM_VMEM_MB, MRJobConfig.DEFAULT_MR_AM_VMEM_MB);
       int amCores = jobConf.getInt(MRJobConfig.MR_AM_CPU_VCORES, MRJobConfig.DEFAULT_MR_AM_CPU_VCORES);
+      LOG.info("Memory tez.am.resource.memory.mb in YARNRunner: {}",
+          dagAMConf.getInt(TezConfiguration.TEZ_AM_RESOURCE_MEMORY_MB,
+              TezConfiguration.TEZ_AM_RESOURCE_MEMORY_MB_DEFAULT));
       dagAMConf.setInt(TezConfiguration.TEZ_AM_RESOURCE_MEMORY_MB, amMemMB);
       dagAMConf.setInt(TezConfiguration.TEZ_AM_RESOURCE_CPU_VCORES, amCores);
+      LOG.info("Memory tez.am.resource.memory.mb in YARNRunner (override): {}",
+          dagAMConf.getInt(TezConfiguration.TEZ_AM_RESOURCE_MEMORY_MB,
+              TezConfiguration.TEZ_AM_RESOURCE_MEMORY_MB_DEFAULT));
 
       dagAMConf.setInt(TezConfiguration.TEZ_AM_MAX_APP_ATTEMPTS, 
           jobConf.getInt(MRJobConfig.MR_AM_MAX_ATTEMPTS, MRJobConfig.DEFAULT_MR_AM_MAX_ATTEMPTS));
