@@ -105,6 +105,7 @@ import org.apache.hadoop.yarn.api.records.ApplicationAttemptId;
 import org.apache.hadoop.yarn.api.records.ApplicationId;
 import org.apache.hadoop.yarn.api.records.ContainerId;
 import org.apache.hadoop.yarn.api.records.LocalResource;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.event.Dispatcher;
 import org.apache.hadoop.yarn.event.Event;
 import org.apache.hadoop.yarn.event.EventHandler;
@@ -2389,7 +2390,8 @@ public class DAGAppMaster extends AbstractService {
           + ", localDirs=" + System.getenv(Environment.LOCAL_DIRS.name())
           + ", logDirs=" + System.getenv(Environment.LOG_DIRS.name()));
 
-      Configuration conf = new Configuration();
+      // TODO Does this really need to be a YarnConfiguration ?
+      Configuration conf = new Configuration(new YarnConfiguration());
 
       ConfigurationProto confProto =
           TezUtilsInternal.readUserSpecifiedTezConfiguration(System.getenv(Environment.PWD.name()));

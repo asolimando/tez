@@ -40,6 +40,7 @@ import org.apache.hadoop.yarn.api.records.ApplicationId;
 import org.apache.hadoop.yarn.api.records.ApplicationReport;
 import org.apache.hadoop.yarn.api.records.FinalApplicationStatus;
 import org.apache.hadoop.yarn.api.records.YarnApplicationState;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.exceptions.YarnException;
 import org.apache.tez.client.FrameworkClient;
 import org.apache.tez.common.counters.TezCounters;
@@ -79,7 +80,8 @@ public class DAGClientImpl extends DAGClient {
   private boolean cleanupFrameworkClient;
 
   public DAGClientImpl(ApplicationId appId, String dagId, TezConfiguration conf,
-      @Nullable FrameworkClient frameworkClient, UserGroupInformation ugi) {
+      YarnConfiguration yarnConf, @Nullable FrameworkClient frameworkClient,
+      UserGroupInformation ugi) {
     this.appId = appId;
     this.dagId = dagId;
     this.conf = conf;
@@ -87,7 +89,7 @@ public class DAGClientImpl extends DAGClient {
       this.frameworkClient = frameworkClient;
     } else {
       this.frameworkClient = FrameworkClient.createFrameworkClient(conf);
-      this.frameworkClient.init(conf);
+      this.frameworkClient.init(conf, yarnConf);
       this.frameworkClient.start();
       cleanupFrameworkClient = true;
     }

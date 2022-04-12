@@ -55,6 +55,7 @@ import org.apache.hadoop.yarn.api.records.NodeId;
 import org.apache.hadoop.yarn.api.records.Priority;
 import org.apache.hadoop.yarn.api.records.Resource;
 import org.apache.hadoop.yarn.client.api.AMRMClient;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.tez.common.MockDNSToSwitchMapping;
 import org.apache.tez.dag.api.InputDescriptor;
 import org.apache.tez.dag.api.OutputDescriptor;
@@ -113,7 +114,7 @@ public class TestContainerReuse {
   public void testDelayedReuseContainerBecomesAvailable()
       throws IOException, InterruptedException, ExecutionException {
     LOG.info("Test testDelayedReuseContainerBecomesAvailable");
-    Configuration conf = new Configuration();
+    Configuration conf = new Configuration(new YarnConfiguration());
     conf.setBoolean(
       TezConfiguration.TEZ_AM_CONTAINER_REUSE_ENABLED, true);
     conf.setBoolean(
@@ -248,7 +249,7 @@ public class TestContainerReuse {
   public void testDelayedReuseContainerNotAvailable()
       throws IOException, InterruptedException, ExecutionException {
     LOG.info("Test testDelayedReuseContainerNotAvailable");
-    Configuration conf = new Configuration();
+    Configuration conf = new Configuration(new YarnConfiguration());
     conf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_ENABLED, true);
     conf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_RACK_FALLBACK_ENABLED, false);
     conf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_NON_LOCAL_FALLBACK_ENABLED, false);
@@ -350,7 +351,7 @@ public class TestContainerReuse {
   @Test(timeout = 10000l)
   public void testSimpleReuse() throws IOException, InterruptedException, ExecutionException {
     LOG.info("Test testSimpleReuse");
-    Configuration tezConf = new Configuration();
+    Configuration tezConf = new Configuration(new YarnConfiguration());
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_ENABLED, true);
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_RACK_FALLBACK_ENABLED, true);
     tezConf.setLong(TezConfiguration.TEZ_AM_CONTAINER_REUSE_LOCALITY_DELAY_ALLOCATION_MILLIS, 0);
@@ -491,7 +492,7 @@ public class TestContainerReuse {
   @Test(timeout = 10000l)
   public void testReuseWithTaskSpecificLaunchCmdOption() throws IOException, InterruptedException, ExecutionException {
     LOG.info("Test testReuseWithTaskSpecificLaunchCmdOption");
-    Configuration tezConf = new Configuration();
+    Configuration tezConf = new Configuration(new YarnConfiguration());
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_ENABLED, true);
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_RACK_FALLBACK_ENABLED, true);
     tezConf.setLong(TezConfiguration.TEZ_AM_CONTAINER_REUSE_LOCALITY_DELAY_ALLOCATION_MILLIS, 0);
@@ -681,7 +682,7 @@ public class TestContainerReuse {
   public void testReuseNonLocalRequest()
       throws IOException, InterruptedException, ExecutionException {
     LOG.info("Test testReuseNonLocalRequest");
-    Configuration tezConf = new Configuration();
+    Configuration tezConf = new Configuration(new YarnConfiguration());
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_ENABLED, true);
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_RACK_FALLBACK_ENABLED, true);
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_NON_LOCAL_FALLBACK_ENABLED, true);
@@ -802,7 +803,7 @@ public class TestContainerReuse {
   public void testReuseAcrossVertices()
       throws IOException, InterruptedException, ExecutionException {
     LOG.info("Test testReuseAcrossVertices");
-    Configuration tezConf = new Configuration();
+    Configuration tezConf = new Configuration(new YarnConfiguration());
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_ENABLED, true);
     tezConf.setLong(
         TezConfiguration.TEZ_AM_CONTAINER_REUSE_LOCALITY_DELAY_ALLOCATION_MILLIS, 1l);
@@ -922,7 +923,7 @@ public class TestContainerReuse {
   @Test(timeout = 30000l)
   public void testReuseLocalResourcesChanged() throws IOException, InterruptedException, ExecutionException {
     LOG.info("Test testReuseLocalResourcesChanged");
-    Configuration tezConf = new Configuration();
+    Configuration tezConf = new Configuration(new YarnConfiguration());
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_ENABLED, true);
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_RACK_FALLBACK_ENABLED, true);
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_NON_LOCAL_FALLBACK_ENABLED, true);
@@ -1079,7 +1080,7 @@ public class TestContainerReuse {
   @Test(timeout = 30000l)
   public void testReuseConflictLocalResources() throws IOException, InterruptedException, ExecutionException {
     LOG.info("Test testReuseLocalResourcesChanged");
-    Configuration tezConf = new Configuration();
+    Configuration tezConf = new Configuration(new YarnConfiguration());
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_ENABLED, true);
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_RACK_FALLBACK_ENABLED, true);
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_NON_LOCAL_FALLBACK_ENABLED, true);
@@ -1316,7 +1317,7 @@ public class TestContainerReuse {
   public void testAssignmentOnShutdown()
       throws IOException, InterruptedException, ExecutionException {
     LOG.info("Test testAssignmentOnShutdown");
-    Configuration tezConf = new Configuration();
+    Configuration tezConf = new Configuration(new YarnConfiguration());
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_ENABLED, false);
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_RACK_FALLBACK_ENABLED, true);
     tezConf.setLong(TezConfiguration.TEZ_AM_CONTAINER_REUSE_LOCALITY_DELAY_ALLOCATION_MILLIS, 0);
@@ -1383,7 +1384,7 @@ public class TestContainerReuse {
 
   @Test(timeout=5000)
   public void testDifferentResourceContainerReuse() throws Exception {
-    Configuration tezConf = new Configuration();
+    Configuration tezConf = new Configuration(new YarnConfiguration());
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_ENABLED, true);
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_RACK_FALLBACK_ENABLED, true);
     tezConf.setLong(TezConfiguration.TEZ_AM_CONTAINER_REUSE_LOCALITY_DELAY_ALLOCATION_MILLIS, 0);
@@ -1519,7 +1520,7 @@ public class TestContainerReuse {
 
   @Test(timeout=5000)
   public void testEnvironmentVarsContainerReuse() throws Exception {
-    Configuration tezConf = new Configuration();
+    Configuration tezConf = new Configuration(new YarnConfiguration());
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_ENABLED, true);
     tezConf.setBoolean(TezConfiguration.TEZ_AM_CONTAINER_REUSE_RACK_FALLBACK_ENABLED, true);
     tezConf.setLong(TezConfiguration.TEZ_AM_CONTAINER_REUSE_LOCALITY_DELAY_ALLOCATION_MILLIS, 0);

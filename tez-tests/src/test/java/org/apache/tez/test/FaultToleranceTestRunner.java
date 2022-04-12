@@ -25,6 +25,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.yarn.api.records.Resource;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.tez.client.TezClientUtils;
 import org.apache.tez.client.TezClient;
 import org.apache.tez.dag.api.DAG;
@@ -51,10 +52,10 @@ public class FaultToleranceTestRunner {
   
   void setup() throws Exception {
     TezConfiguration tezConf = null;
-    if (conf == null) {
-      tezConf = new TezConfiguration();
-    } else {
-      tezConf = new TezConfiguration(this.conf);
+    if (conf == null ) {
+      tezConf = new TezConfiguration(new YarnConfiguration());
+    }else {
+       tezConf = new TezConfiguration(new YarnConfiguration(this.conf));
     }
     FileSystem defaultFs = FileSystem.get(tezConf);
 

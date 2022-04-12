@@ -57,6 +57,7 @@ import org.apache.hadoop.yarn.api.records.ApplicationSubmissionContext;
 import org.apache.hadoop.yarn.api.records.LocalResource;
 import org.apache.hadoop.yarn.api.records.LocalResourceType;
 import org.apache.hadoop.yarn.api.records.YarnApplicationState;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.exceptions.ApplicationNotFoundException;
 import org.apache.hadoop.yarn.exceptions.YarnException;
 import org.apache.hadoop.util.Time;
@@ -383,6 +384,7 @@ public class TezClient {
    * @throws IOException
    */
   public synchronized void start() throws TezException, IOException {
+    amConfig.setYarnConfiguration(new YarnConfiguration(amConfig.getTezConfiguration()));
     startFrameworkClient();
     setupJavaOptsChecker();
 
@@ -432,6 +434,7 @@ public class TezClient {
    */
   public synchronized TezClient getClient(ApplicationId appId) throws TezException, IOException {
     sessionAppId = appId;
+    amConfig.setYarnConfiguration(new YarnConfiguration(amConfig.getTezConfiguration()));
     startFrameworkClient();
     setupJavaOptsChecker();
 
@@ -463,7 +466,7 @@ public class TezClient {
 
   private void startFrameworkClient() {
     frameworkClient = createFrameworkClient();
-    frameworkClient.init(amConfig.getTezConfiguration());
+    frameworkClient.init(amConfig.getTezConfiguration(), amConfig.getYarnConfiguration());
     frameworkClient.start();
   }
 
@@ -713,6 +716,7 @@ public class TezClient {
         + ", dagName=" + dag.getName());
     return new DAGClientImpl(sessionAppId, dagId,
         amConfig.getTezConfiguration(),
+        amConfig.getYarnConfiguration(),
         frameworkClient, getUgi());
   }
 
@@ -1064,7 +1068,7 @@ public class TezClient {
   protected DAGClientAMProtocolBlockingPB getAMProxy(ApplicationId appId)
       throws TezException, IOException {
     return TezClientUtils.getAMProxy(
-        frameworkClient, amConfig.getTezConfiguration(), appId, getUgi());
+        frameworkClient, amConfig.getYarnConfiguration(), appId, getUgi());
   }
 
   private DAGClientAMProtocolBlockingPB waitForProxy()
@@ -1142,7 +1146,8 @@ public class TezClient {
     }
     // wait for dag in non-session mode to start running, so that we can start to getDAGStatus
     waitNonSessionTillReady();
-    return getDAGClient(appId, amConfig.getTezConfiguration(), frameworkClient, getUgi());
+    return getDAGClient(appId, amConfig.getTezConfiguration(), amConfig.getYarnConfiguration(),
+        frameworkClient, getUgi());
   }
 
   private ApplicationId createApplication() throws TezException, IOException {
@@ -1165,17 +1170,20 @@ public class TezClient {
   }
 
   @Private
-  static DAGClient getDAGClient(ApplicationId appId, TezConfiguration tezConf,
-      FrameworkClient frameworkClient, UserGroupInformation ugi) throws IOException, TezException {
-    return new DAGClientImpl(appId, getDefaultTezDAGID(appId), tezConf, frameworkClient, ugi);
+  static DAGClient getDAGClient(ApplicationId appId, TezConfiguration tezConf, YarnConfiguration
+      yarnConf, FrameworkClient frameworkClient, UserGroupInformation ugi)
+      throws IOException, TezException {
+    return new DAGClientImpl(appId, getDefaultTezDAGID(appId), tezConf,
+        yarnConf, frameworkClient, ugi);
   }
 
   @Private // Used only for MapReduce compatibility code
   static DAGClient getDAGClient(ApplicationId appId, TezConfiguration tezConf,
-      FrameworkClient frameworkClient) throws IOException, TezException {
+                                FrameworkClient frameworkClient)
+      throws IOException, TezException {
     UserGroupInformation ugi =
         UserGroupInformation.createRemoteUser(UserGroupInformation.getCurrentUser().getUserName());
-    return getDAGClient(appId, tezConf, frameworkClient, ugi);
+    return getDAGClient(appId, tezConf, new YarnConfiguration(tezConf), frameworkClient, ugi);
   }
 
   // DO NOT CHANGE THIS. This code is replicated from TezDAGID.java

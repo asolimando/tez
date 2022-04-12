@@ -45,8 +45,8 @@ public class TezYarnClient extends FrameworkClient {
   }
 
   @Override
-  public void init(TezConfiguration tezConf) {
-    yarnClient.init(new YarnConfiguration(tezConf));
+  public void init(TezConfiguration tezConf, YarnConfiguration yarnConf) {
+    yarnClient.init(yarnConf);
   }
 
   @Override

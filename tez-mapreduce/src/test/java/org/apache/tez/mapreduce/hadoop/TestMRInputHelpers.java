@@ -40,6 +40,7 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.split.JobSplit;
 import org.apache.hadoop.mapreduce.split.SplitMetaInfoReader;
 import org.apache.hadoop.yarn.api.records.LocalResource;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.tez.dag.api.DataSourceDescriptor;
 import org.apache.tez.dag.api.TaskLocationHint;
 import org.junit.Assert;
@@ -70,7 +71,7 @@ public class TestMRInputHelpers {
       throw new RuntimeException("problem starting mini dfs cluster", io);
     }
 
-    Configuration testConf = new Configuration(
+    Configuration testConf = new YarnConfiguration(
         dfsCluster.getFileSystem().getConf());
 
 

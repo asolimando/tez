@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.yarn.api.records.LocalResource;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.tez.dag.api.TezConfiguration;
 
 import com.google.common.collect.Maps;
@@ -33,6 +34,7 @@ class AMConfiguration {
   private Map<String, LocalResource> amLocalResources = Maps.newHashMap();
   private TezConfiguration tezConf;
   private Credentials credentials;
+  private YarnConfiguration yarnConfig;
   private LocalResource binaryConfLRsrc;
 
   AMConfiguration(TezConfiguration tezConf, Map<String, LocalResource> localResources,
@@ -62,6 +64,10 @@ class AMConfiguration {
   void setTezConfiguration(TezConfiguration tezConf) {
     this.tezConf = tezConf;
   }
+  
+  void setYarnConfiguration(YarnConfiguration yarnConf) {
+    this.yarnConfig = yarnConf;
+  }
 
   String getQueueName() {
     return this.tezConf.get(TezConfiguration.TEZ_QUEUE_NAME);
@@ -75,6 +81,10 @@ class AMConfiguration {
     return tezConf;
   }
 
+  YarnConfiguration getYarnConfiguration() {
+    return yarnConfig;
+  }
+  
   Credentials getCredentials() {
     return credentials;
   }
